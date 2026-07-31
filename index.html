@@ -61,11 +61,12 @@ h1{
   align-items: center;
   gap: 10px;
   padding: 8px 16px;
-  background: rgba(38, 16, 56, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(38, 16, 56, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 999px;
   backdrop-filter: blur(10px);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  cursor: pointer;
 }
 .music-btn {
   background: none;
@@ -73,30 +74,26 @@ h1{
   color: #ffc9e6;
   font-size: 18px;
   cursor: pointer;
-  padding: 4px;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.2s, color 0.2s;
-}
-.music-btn:hover {
-  transform: scale(1.15);
-  color: #fff;
 }
 .music-label {
   font-size: 11px;
   letter-spacing: 0.1em;
   color: #c9a6d8;
   text-transform: uppercase;
+  user-select: none;
 }
 
-/* Cosmic Canvas Setup - Pushed down further */
+/* Cosmic Canvas Setup */
 .universe-stage {
   position: relative;
   width: 100vw;
   height: 680px;
   max-width: 1200px;
-  margin: 220px auto 40px; /* Pushed down significantly further */
+  margin: 60px auto 20px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -220,7 +217,17 @@ h1{
 }
 .box button:hover{transform:scale(1.05);box-shadow:0 0 40px rgba(255,77,132,.7);}
 
-footer{position:relative;z-index:10;padding:20px 0 32px;text-align:center;font-size:12px;color:#c9a6d8}
+/* Clear of all orbit rings completely */
+footer{
+  position:relative;
+  z-index:10;
+  margin-top:280px;
+  padding:30px 0 60px;
+  text-align:center;
+  font-size:13px;
+  letter-spacing: 0.05em;
+  color:#c9a6d8;
+}
 </style>
 </head>
 <body>
@@ -233,8 +240,8 @@ footer{position:relative;z-index:10;padding:20px 0 32px;text-align:center;font-s
   <p class="counter"><b id="count">0</b><span id="total"></span> planets visited<span id="secretNote"></span></p>
 </div>
 
-<!-- Music Player Widget -->
-<div class="music-controls">
+<!-- Background Music Player Widget -->
+<div class="music-controls" id="musicWrapper">
   <button class="music-btn" id="musicToggle" aria-label="Play Music">🎵</button>
   <span class="music-label" id="musicStatus">Play Melody</span>
 </div>
@@ -261,7 +268,7 @@ footer{position:relative;z-index:10;padding:20px 0 32px;text-align:center;font-s
   </div>
 </div>
 
-<footer>made with 💖 in a corner of the galaxy</footer>
+<footer>made with 💖 in Attiki</footer>
 
 <script>
 const PLANETS = [
@@ -273,8 +280,8 @@ const PLANETS = [
    lines:["A small kitchen, loud music, slow mornings.","Wherever we land — we build the whole world there."]},
   {id:"moon", emoji:"🌙", name:"Our Moon", color:"#e6e6f0", size:50, orbitRadius: 245, speed: 52,
    lines:["Same moon, two windows, one heart.","Look up tonight — I'll be looking too."]},
-  {id:"music", emoji:"🎵", name:"Melody", color:"#d946ef", size:44, orbitRadius: 290, speed: 60,
-   lines:["Our song still plays when the sky goes quiet.","Some notes only sound right next to you."]},
+  {id:"weed", emoji:"🌿", name:"Weed", color:"#10b981", size:48, orbitRadius: 290, speed: 60,
+   lines:["High above the clouds, high on each other. 💨🌿","Getting high, laughing at nothing, floating through the universe with you."]},
   {id:"dream", emoji:"🌠", name:"Dreams", color:"#6f7bff", size:52, orbitRadius: 335, speed: 68,
    lines:["I keep meeting you in places we haven't been yet.","Sleep well — I'll save you a seat in mine."]},
   {id:"adventure", emoji:"🚀", name:"Adventure", color:"#ff8a3d", size:46, orbitRadius: 380, speed: 76,
@@ -314,31 +321,35 @@ for (let i = 0; i < 18; i++) {
   heartLayer.appendChild(h);
 }
 
-/* Music Control Logic */
+/* Audio Player Logic */
 const audio = document.getElementById("bgMusic");
+const musicWrapper = document.getElementById("musicWrapper");
 const musicBtn = document.getElementById("musicToggle");
 const musicStatus = document.getElementById("musicStatus");
 
-function toggleMusic() {
-  if (audio.paused) {
-    audio.play();
+function playAudio() {
+  audio.play().then(() => {
     musicBtn.textContent = "⏸️";
     musicStatus.textContent = "Playing";
+  }).catch(err => console.log("User click required for audio:", err));
+}
+
+function toggleMusic(e) {
+  if (e) e.stopPropagation();
+  if (audio.paused) {
+    playAudio();
   } else {
     audio.pause();
     musicBtn.textContent = "🎵";
     musicStatus.textContent = "Paused";
   }
 }
-musicBtn.addEventListener("click", toggleMusic);
 
-// Auto-start music on first user click anywhere on page
-document.body.addEventListener('click', function startMusicOnFirstClick() {
+musicWrapper.addEventListener("click", toggleMusic);
+
+document.addEventListener('click', function autoPlayFirstClick() {
   if (audio.paused) {
-    audio.play().then(() => {
-      musicBtn.textContent = "⏸️";
-      musicStatus.textContent = "Playing";
-    }).catch(() => {});
+    playAudio();
   }
 }, { once: true });
 
@@ -354,21 +365,18 @@ function buildUniverse() {
 
     const responsiveRadius = Math.min(p.orbitRadius, window.innerWidth * 0.44);
 
-    // Orbit Path ring
     const ring = document.createElement("div");
     ring.className = "orbit-ring";
     ring.style.width = (responsiveRadius * 2) + "px";
     ring.style.height = (responsiveRadius * 2) + "px";
     stage.appendChild(ring);
 
-    // Rotating Track
     const track = document.createElement("div");
     track.className = "orbit-track";
     track.style.width = (responsiveRadius * 2) + "px";
     track.style.height = (responsiveRadius * 2) + "px";
     track.style.animationDuration = p.speed + "s";
     
-    // Planet button
     const btn = document.createElement("button");
     btn.className = "planet";
     btn.id = "planet-" + p.id;
@@ -404,7 +412,6 @@ function openBox(p) {
   document.getElementById("boxText").innerHTML = p.lines.map(l => `<p>${l}</p>`).join("");
   document.getElementById("overlay").classList.add("show");
   
-  // Add checkmark without resetting universe rotation
   const btn = document.getElementById("planet-" + p.id);
   if (btn) {
     const tickContainer = btn.querySelector('.tick-mark');
@@ -413,7 +420,6 @@ function openBox(p) {
     }
   }
 
-  // Check if secret planet should spawn
   if (visited.size >= TOTAL && !document.getElementById("planet-secret")) {
     buildUniverse();
   }
