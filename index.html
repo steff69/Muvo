@@ -6,105 +6,203 @@
 <title>Voaki &amp; Mustafaki Universe ❤️</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;1,400&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
+:root {
+  --cosmic-bg: #07030e;
+  --accent-pink: #ff5c8a;
+  --accent-glow: #ffc9e6;
+}
+
 *{box-sizing:border-box}
 body{
   margin:0;min-height:100vh;font-family:"Outfit",sans-serif;color:#fdeef8;
   background:
-    radial-gradient(120% 90% at 50% -10%, rgba(150,60,190,.55), transparent 60%),
-    radial-gradient(90% 70% at 15% 110%, rgba(50,80,190,.45), transparent 65%),
-    linear-gradient(180deg,#1d0a2e,#08040f);
-  background-attachment:fixed;overflow-x:hidden
+    radial-gradient(circle at 50% 50%, rgba(90, 30, 110, 0.45), transparent 70%),
+    radial-gradient(circle at 20% 80%, rgba(20, 50, 120, 0.4), transparent 60%),
+    linear-gradient(180deg, #10051d, #040208);
+  background-attachment:fixed;overflow-x:hidden;
 }
-.eyebrow{margin:48px 0 0;text-align:center;font-size:11px;letter-spacing:.45em;text-transform:uppercase;color:#c9a6d8}
-h1{
-  margin:16px 0 0;text-align:center;font-family:"Fraunces",serif;font-style:italic;font-weight:600;
-  font-size:clamp(34px,7vw,64px);
-  background:linear-gradient(100deg,#ffc9e6,#e0a8ff,#a8e0ff);
-  -webkit-background-clip:text;background-clip:text;color:transparent
-}
-.names{margin:14px 0 0;text-align:center;font-family:"Fraunces",serif;font-size:clamp(18px,4vw,26px)}
-.names span{color:#ff5c8a}
-.sub{margin:8px 0 0;text-align:center;font-size:14px;color:#c9a6d8}
-.counter{
-  display:block;width:max-content;margin:24px auto 0;padding:6px 16px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);
-  font-size:12px;color:#c9a6d8;backdrop-filter:blur(6px)
-}
-.counter b{color:#ff5c8a}
 
-/* stars + hearts */
+/* Header & Counters */
+.header-container {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding-top: 36px;
+  pointer-events: none;
+}
+.eyebrow{margin:0;text-align:center;font-size:11px;letter-spacing:.45em;text-transform:uppercase;color:#c9a6d8}
+h1{
+  margin:12px 0 0;text-align:center;font-family:"Fraunces",serif;font-style:italic;font-weight:600;
+  font-size:clamp(34px,6vw,58px);
+  background:linear-gradient(100deg,#ffc9e6,#e0a8ff,#a8e0ff);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter: drop-shadow(0 0 15px rgba(224,168,255,0.3));
+}
+.names{margin:10px 0 0;text-align:center;font-family:"Fraunces",serif;font-size:clamp(18px,3.5vw,24px)}
+.names span{color:var(--accent-pink); animation: pulseHeart 1.5s infinite alternate ease-in-out; display:inline-block;}
+@keyframes pulseHeart { from{transform:scale(0.9);} to{transform:scale(1.2);} }
+
+.sub{margin:8px 0 0;text-align:center;font-size:13px;color:#c9a6d8}
+.counter{
+  display:inline-block;margin:18px auto 0;padding:6px 18px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);
+  font-size:12px;color:#c9a6d8;backdrop-filter:blur(8px);pointer-events:auto;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+.counter b{color:var(--accent-pink)}
+
+/* Cosmic Canvas Setup - Pushed down to avoid overlapping header */
+.universe-stage {
+  position: relative;
+  width: 100vw;
+  height: 680px;
+  max-width: 1200px;
+  margin: 80px auto 40px; /* Added margin top to push circles clear of text */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.center-sun {
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ffffff, #ff7bb0 40%, #d946ef 85%);
+  box-shadow: 0 0 50px #ff5c8a, 0 0 100px rgba(217, 70, 239, 0.6);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  animation: sunGlow 4s infinite alternate ease-in-out;
+}
+@keyframes sunGlow {
+  from { box-shadow: 0 0 40px #ff5c8a, 0 0 80px rgba(217, 70, 239, 0.5); transform: scale(0.98); }
+  to { box-shadow: 0 0 65px #ff8ab3, 0 0 130px rgba(217, 70, 239, 0.8); transform: scale(1.04); }
+}
+
+/* Orbit Lines */
+.orbit-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  pointer-events: none;
+}
+
+/* Interactive Planets */
+.orbit-track {
+  position: absolute;
+  border-radius: 50%;
+  animation: spinOrbit linear infinite;
+  pointer-events: none; /* Let click pass through empty space */
+}
+.orbit-track:hover { animation-play-state: paused; }
+
+@keyframes spinOrbit {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.planet {
+  position: absolute;
+  border: 0; background: none; padding: 0; cursor: pointer;
+  transform: translate(-50%, -50%);
+  outline: none;
+  pointer-events: auto; /* Enable clicking directly on the planets */
+}
+
+.planet .halo {
+  position: absolute; inset: -8px; border-radius: 50%;
+  filter: blur(14px); opacity: 0.6; transition: opacity .3s, transform .3s;
+  pointer-events: none;
+}
+.planet .ball {
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%; border: 1px solid rgba(255,255,255,.35);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.planet-content {
+  display: flex; flex-direction: column; align-items: center;
+}
+
+.planet:hover .ball, .planet:focus-visible .ball {
+  transform: scale(1.25);
+  border-color: #fff;
+}
+.planet:hover .halo { opacity: 1; transform: scale(1.3); }
+
+.planet .name {
+  position: absolute;
+  top: 105%;
+  white-space: nowrap;
+  font-size: 11px; letter-spacing: .15em; text-transform: uppercase;
+  color: #e2c2f0; opacity: 0.85; transition: .3s;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.9);
+  pointer-events: none;
+}
+.planet:hover .name { opacity: 1; color: #fff; text-shadow: 0 0 8px rgba(255,255,255,0.8); }
+.planet .tick { position: absolute; top: -6px; right: -6px; font-size: 14px; text-shadow: 0 0 6px #fff; }
+
+/* Background Canvas Layers */
 .layer{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
 .star{position:absolute;border-radius:50%;background:#fff;animation:twinkle 3s infinite alternate}
-@keyframes twinkle{from{opacity:.15;transform:scale(.7)}to{opacity:1;transform:scale(1.15)}}
+@keyframes twinkle{from{opacity:.15;transform:scale(.7)}to{opacity:1;transform:scale(1.2)}}
 .heart{position:absolute;bottom:-40px;animation:fly linear infinite}
 @keyframes fly{
   from{transform:translateY(10vh) scale(.7) rotate(-8deg);opacity:0}
-  12%{opacity:.9}
+  12%{opacity:.85}
   to{transform:translateY(-105vh) scale(1.15) rotate(10deg);opacity:0}
 }
 
-/* planets */
-.space{
-  position:relative;z-index:1;max-width:1000px;margin:48px auto 0;padding:0 24px 80px;
-  display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:48px 32px
-}
-.planet{
-  position:relative;border:0;background:none;padding:0;cursor:pointer;
-  animation:drift 9s ease-in-out infinite alternate
-}
-@keyframes drift{from{transform:translateY(0)}to{transform:translateY(-18px)}}
-.planet .halo{position:absolute;inset:0;border-radius:50%;filter:blur(28px);animation:halo 4s ease-in-out infinite;z-index:-1}
-@keyframes halo{0%,100%{opacity:.35;transform:scale(1)}50%{opacity:.75;transform:scale(1.12)}}
-.planet .ball{
-  display:flex;align-items:center;justify-content:center;border-radius:50%;
-  border:1px solid rgba(255,255,255,.2);font-size:38px;
-  box-shadow:0 25px 50px rgba(0,0,0,.45);transition:transform .5s
-}
-.planet:hover .ball,.planet:focus-visible .ball{transform:scale(1.15)}
-.planet .name{
-  display:block;margin-top:12px;text-align:center;font-size:11px;letter-spacing:.2em;
-  text-transform:uppercase;color:#c9a6d8;opacity:0;transition:.3s
-}
-.planet:hover .name,.planet:focus-visible .name{opacity:1}
-.planet .tick{position:absolute;top:-4px;right:-4px;font-size:14px}
-
-/* modal */
+/* Modal Window */
 .overlay{
-  position:fixed;inset:0;z-index:20;display:none;align-items:center;justify-content:center;padding:24px;
-  background:rgba(10,4,18,.7);backdrop-filter:blur(8px)
+  position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:24px;
+  background:rgba(7, 3, 14, 0.75);backdrop-filter:blur(12px);
 }
 .overlay.show{display:flex}
 .box{
-  width:100%;max-width:420px;padding:36px;text-align:center;border-radius:32px;
-  border:1px solid rgba(255,255,255,.14);background:rgba(38,16,56,.95);
-  box-shadow:0 0 90px rgba(255,110,180,.45);animation:pop .35s ease-out
+  width:100%;max-width:440px;padding:40px 32px;text-align:center;border-radius:32px;
+  border:1px solid rgba(255,255,255,.18);background:linear-gradient(145deg, rgba(42, 18, 62, 0.95), rgba(20, 8, 32, 0.98));
+  box-shadow:0 0 80px rgba(239, 68, 163, 0.35);animation:pop .4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-@keyframes pop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
-.box .icon{width:64px;height:64px;margin:0 auto 18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px}
-.box h2{margin:0;font-family:"Fraunces",serif;font-style:italic;font-size:26px;color:#ffc9e6}
-.box p{margin:14px 0 0;font-size:14px;line-height:1.7;color:rgba(253,238,248,.85)}
+@keyframes pop{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+.box .icon{width:72px;height:72px;margin:0 auto 20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:34px;box-shadow:0 10px 25px rgba(0,0,0,0.3)}
+.box h2{margin:0;font-family:"Fraunces",serif;font-style:italic;font-size:28px;color:#ffc9e6}
+.box p{margin:14px 0 0;font-size:15px;line-height:1.7;color:rgba(253,238,248,.9)}
 .box button{
-  margin-top:26px;padding:13px 28px;border:0;border-radius:999px;cursor:pointer;
-  background:#ff4d84;color:#fff;font-family:inherit;font-size:14px;font-weight:600;
-  box-shadow:0 0 40px rgba(255,77,132,.5);transition:transform .2s
+  margin-top:28px;padding:14px 32px;border:0;border-radius:999px;cursor:pointer;
+  background:linear-gradient(90deg, #ff4d84, #d946ef);color:#fff;font-family:inherit;font-size:14px;font-weight:600;
+  box-shadow:0 0 30px rgba(255,77,132,.4);transition:transform .2s, box-shadow .2s;
 }
-.box button:hover{transform:scale(1.06)}
-footer{position:relative;z-index:1;padding:0 0 32px;text-align:center;font-size:12px;color:#c9a6d8}
+.box button:hover{transform:scale(1.05);box-shadow:0 0 40px rgba(255,77,132,.7);}
+
+footer{position:relative;z-index:10;padding:20px 0 32px;text-align:center;font-size:12px;color:#c9a6d8}
 </style>
 </head>
 <body>
 
-<p class="eyebrow">Est. one starry night</p>
-<h1>Our Little Universe</h1>
-<p class="names">Vo <span>✦</span> Mustafaki</p>
-<p class="sub">Two souls, one universe — tap a planet to hear it speak.</p>
-<p class="counter"><b id="count">0</b><span id="total"></span> planets visited<span id="secretNote"></span></p>
+<div class="header-container">
+  <p class="eyebrow">Est. one starry night</p>
+  <h1>Our Little Universe</h1>
+  <p class="names">Vo <span>✦</span> Mustafaki</p>
+  <p class="sub">Two souls, one synchronized cosmos — select an orbiting world.</p>
+  <p class="counter"><b id="count">0</b><span id="total"></span> planets visited<span id="secretNote"></span></p>
+</div>
 
 <div class="layer" id="stars"></div>
 <div class="layer" id="hearts"></div>
 
-<section class="space" id="space"></section>
+<!-- System Stage -->
+<main class="universe-stage" id="universeStage">
+  <div class="center-sun">💖</div>
+</main>
 
+<!-- Dialog Box -->
 <div class="overlay" id="overlay">
   <div class="box">
     <div class="icon" id="boxIcon"></div>
@@ -117,28 +215,29 @@ footer{position:relative;z-index:1;padding:0 0 32px;text-align:center;font-size:
 <footer>made with 💖 in a corner of the galaxy</footer>
 
 <script>
+// Removed "Planet" from all object names
 const PLANETS = [
-  {id:"heart", emoji:"❤️", name:"Planet Love", color:"#ff3f6d", size:128,
+  {id:"heart", emoji:"❤️", name:"Love", color:"#ff3f6d", size:56, orbitRadius: 110, speed: 28,
    lines:["Of all the orbits in all the skies, mine keeps bending back to you.","You are my gravity, Vo. — Mustafaki"]},
-  {id:"memory", emoji:"⭐", name:"Planet Memories", color:"#ffc857", size:104,
+  {id:"memory", emoji:"⭐", name:"Memories", color:"#ffc857", size:48, orbitRadius: 155, speed: 36,
    lines:["Every laugh we stole became a star up here.","That first late-night call still burns the brightest."]},
-  {id:"future", emoji:"🌎", name:"Planet Future", color:"#3ec5ff", size:150,
+  {id:"future", emoji:"🌎", name:"Future", color:"#3ec5ff", size:58, orbitRadius: 200, speed: 44,
    lines:["A small kitchen, loud music, slow mornings.","Wherever we land — we build the whole world there."]},
-  {id:"moon", emoji:"🌙", name:"Our Moon", color:"#e6e6f0", size:118,
+  {id:"moon", emoji:"🌙", name:"Our Moon", color:"#e6e6f0", size:50, orbitRadius: 245, speed: 52,
    lines:["Same moon, two windows, one heart.","Look up tonight — I'll be looking too."]},
-  {id:"music", emoji:"🎵", name:"Planet Melody", color:"#d946ef", size:96,
+  {id:"music", emoji:"🎵", name:"Melody", color:"#d946ef", size:44, orbitRadius: 290, speed: 60,
    lines:["Our song still plays when the sky goes quiet.","Some notes only sound right next to you."]},
-  {id:"dream", emoji:"🌠", name:"Planet Dreams", color:"#6f7bff", size:110,
+  {id:"dream", emoji:"🌠", name:"Dreams", color:"#6f7bff", size:52, orbitRadius: 335, speed: 68,
    lines:["I keep meeting you in places we haven't been yet.","Sleep well — I'll save you a seat in mine."]},
-  {id:"adventure", emoji:"🚀", name:"Planet Adventure", color:"#ff8a3d", size:100,
+  {id:"adventure", emoji:"🚀", name:"Adventure", color:"#ff8a3d", size:46, orbitRadius: 380, speed: 76,
    lines:["Pick a coordinate, any coordinate — I'm already packed.","The map only makes sense with two names on it."]},
-  {id:"home", emoji:"🏡", name:"Planet Home", color:"#57c98a", size:112,
+  {id:"home", emoji:"🏡", name:"Home", color:"#57c98a", size:52, orbitRadius: 425, speed: 84,
    lines:["Home was never a place. It was the sound of you arriving.","Door's always open on this one."]},
-  {id:"forever", emoji:"💫", name:"Planet Forever", color:"#c77dff", size:122,
+  {id:"forever", emoji:"💫", name:"Forever", color:"#c77dff", size:54, orbitRadius: 470, speed: 92,
    lines:["Stars burn out. This doesn't.","However long forever is — add one more day."]},
-  {id:"stars", emoji:"✨", name:"Planet Stardust", color:"#ffe08a", size:92,
+  {id:"stars", emoji:"✨", name:"Stardust", color:"#ffe08a", size:42, orbitRadius: 510, speed: 100,
    lines:["We're made of the same leftover light.","Every wish I threw up here had your name on it."]},
-  {id:"secret", emoji:"💖", name:"Secret Planet", color:"#ff6fae", size:132, secret:true,
+  {id:"secret", emoji:"💖", name:"Secret World", color:"#ff6fae", size:62, orbitRadius: 550, speed: 110, secret:true,
    lines:["The hidden planet only you could reach.","Forever, in every universe. Yours — Mustafaki."]}
 ];
 
@@ -146,57 +245,88 @@ const TOTAL = PLANETS.filter(p => !p.secret).length;
 const visited = new Set();
 document.getElementById("total").textContent = "/" + TOTAL;
 
-/* stars */
+/* Starfield generator */
 const starLayer = document.getElementById("stars");
-for (let i = 0; i < 110; i++) {
+for (let i = 0; i < 140; i++) {
   const s = document.createElement("span");
   s.className = "star";
-  const size = 1.5 + Math.random() * 2;
+  const size = 1 + Math.random() * 2.5;
   s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;width:${size}px;height:${size}px;animation-delay:${Math.random()*3}s`;
   starLayer.appendChild(s);
 }
 
-/* hearts */
+/* Floating heart particle system */
 const glyphs = ["💖","💫","❤️","✨","💕","🌟"];
 const heartLayer = document.getElementById("hearts");
-for (let i = 0; i < 16; i++) {
+for (let i = 0; i < 18; i++) {
   const h = document.createElement("span");
   h.className = "heart";
   h.textContent = glyphs[i % glyphs.length];
-  h.style.cssText = `left:${Math.random()*96}%;font-size:${18+Math.random()*16}px;animation-duration:${9+Math.random()*5}s;animation-delay:${Math.random()*11}s`;
+  h.style.cssText = `left:${Math.random()*96}%;font-size:${16+Math.random()*14}px;animation-duration:${8+Math.random()*6}s;animation-delay:${Math.random()*10}s`;
   heartLayer.appendChild(h);
 }
 
-/* planets */
-const space = document.getElementById("space");
-function render() {
-  space.innerHTML = "";
+/* Constructing Orbital System */
+const stage = document.getElementById("universeStage");
+
+function buildUniverse() {
+  const existingTracks = stage.querySelectorAll('.orbit-ring, .orbit-track');
+  existingTracks.forEach(el => el.remove());
+
   PLANETS.forEach((p, i) => {
     if (p.secret && visited.size < TOTAL) return;
+
+    const responsiveRadius = Math.min(p.orbitRadius, window.innerWidth * 0.44);
+
+    // Orbit Path ring
+    const ring = document.createElement("div");
+    ring.className = "orbit-ring";
+    ring.style.width = (responsiveRadius * 2) + "px";
+    ring.style.height = (responsiveRadius * 2) + "px";
+    stage.appendChild(ring);
+
+    // Rotating Track
+    const track = document.createElement("div");
+    track.className = "orbit-track";
+    track.style.width = (responsiveRadius * 2) + "px";
+    track.style.height = (responsiveRadius * 2) + "px";
+    track.style.animationDuration = p.speed + "s";
+    
+    // Planet button
     const btn = document.createElement("button");
     btn.className = "planet";
     btn.setAttribute("aria-label", p.name);
-    btn.style.animationDelay = (i * 0.3) + "s";
+    btn.style.left = "50%";
+    btn.style.top = "0%";
+    
     btn.innerHTML = `
       <span class="halo" style="background:${p.color}"></span>
-      <span class="ball" style="width:${p.size}px;height:${p.size}px;background:radial-gradient(circle at 32% 28%, #fff8, ${p.color} 62%, #0006)">${p.emoji}</span>
-      <span class="name">${p.name}</span>
+      <div class="planet-content">
+        <span class="ball" style="width:${p.size}px;height:${p.size}px;background:radial-gradient(circle at 30% 30%, #ffffff, ${p.color} 65%, #000000)">${p.emoji}</span>
+        <span class="name">${p.name}</span>
+      </div>
       ${visited.has(p.id) ? '<span class="tick">✧</span>' : ""}`;
-    btn.onclick = () => openBox(p);
-    space.appendChild(btn);
+    
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      openBox(p);
+    };
+
+    track.appendChild(btn);
+    stage.appendChild(track);
   });
 }
 
 function openBox(p) {
   visited.add(p.id);
   document.getElementById("count").textContent = [...visited].filter(id => id !== "secret").length;
-  document.getElementById("secretNote").textContent = visited.size >= TOTAL ? " · secret revealed 💖" : "";
+  document.getElementById("secretNote").textContent = visited.size >= TOTAL ? " · secret unlocked 💖" : "";
   document.getElementById("boxIcon").textContent = p.emoji;
   document.getElementById("boxIcon").style.background = p.color;
   document.getElementById("boxTitle").textContent = p.name;
   document.getElementById("boxText").innerHTML = p.lines.map(l => `<p>${l}</p>`).join("");
   document.getElementById("overlay").classList.add("show");
-  render();
+  buildUniverse();
 }
 
 function closeBox() {
@@ -208,7 +338,8 @@ document.getElementById("overlay").addEventListener("click", e => {
 });
 document.addEventListener("keydown", e => e.key === "Escape" && closeBox());
 
-render();
+window.addEventListener('resize', buildUniverse);
+buildUniverse();
 </script>
 </body>
 </html>
