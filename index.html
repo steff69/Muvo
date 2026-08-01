@@ -93,7 +93,7 @@ h1{
   width: 100vw;
   height: 680px;
   max-width: 1200px;
-  margin: 60px auto 20px;
+  margin: 220px auto 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -217,17 +217,7 @@ h1{
 }
 .box button:hover{transform:scale(1.05);box-shadow:0 0 40px rgba(255,77,132,.7);}
 
-/* Clear of all orbit rings completely */
-footer{
-  position:relative;
-  z-index:10;
-  margin-top:280px;
-  padding:30px 0 60px;
-  text-align:center;
-  font-size:13px;
-  letter-spacing: 0.05em;
-  color:#c9a6d8;
-}
+footer{position:relative;z-index:10;padding:40px 0 32px;margin-top:150px;text-align:center;font-size:12px;color:#c9a6d8}
 </style>
 </head>
 <body>
@@ -246,6 +236,7 @@ footer{
   <span class="music-label" id="musicStatus">Play Melody</span>
 </div>
 
+<!-- Reverted back to original working track -->
 <audio id="bgMusic" loop preload="auto">
   <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112188.mp3" type="audio/mpeg">
 </audio>
@@ -347,6 +338,7 @@ function toggleMusic(e) {
 
 musicWrapper.addEventListener("click", toggleMusic);
 
+// Auto-start music on first interaction anywhere on page
 document.addEventListener('click', function autoPlayFirstClick() {
   if (audio.paused) {
     playAudio();
@@ -365,18 +357,21 @@ function buildUniverse() {
 
     const responsiveRadius = Math.min(p.orbitRadius, window.innerWidth * 0.44);
 
+    // Orbit Path ring
     const ring = document.createElement("div");
     ring.className = "orbit-ring";
     ring.style.width = (responsiveRadius * 2) + "px";
     ring.style.height = (responsiveRadius * 2) + "px";
     stage.appendChild(ring);
 
+    // Rotating Track
     const track = document.createElement("div");
     track.className = "orbit-track";
     track.style.width = (responsiveRadius * 2) + "px";
     track.style.height = (responsiveRadius * 2) + "px";
     track.style.animationDuration = p.speed + "s";
     
+    // Planet button
     const btn = document.createElement("button");
     btn.className = "planet";
     btn.id = "planet-" + p.id;
@@ -412,6 +407,7 @@ function openBox(p) {
   document.getElementById("boxText").innerHTML = p.lines.map(l => `<p>${l}</p>`).join("");
   document.getElementById("overlay").classList.add("show");
   
+  // Add checkmark without resetting universe rotation
   const btn = document.getElementById("planet-" + p.id);
   if (btn) {
     const tickContainer = btn.querySelector('.tick-mark');
@@ -420,6 +416,7 @@ function openBox(p) {
     }
   }
 
+  // Check if secret planet should spawn
   if (visited.size >= TOTAL && !document.getElementById("planet-secret")) {
     buildUniverse();
   }
